@@ -1,0 +1,53 @@
+{% extends "productivity_tools/base.html" %}
+
+{% block content %}
+<div class="flex justify-center bg-gray-100 mt-[50px] px-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
+        
+        <!-- Titre principal -->
+        <h1 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Créer un Bilan Hebdomadaire</h1>
+        
+        <!-- Formulaire -->
+        <form action="{% url 'productivity_tools:create_weekly_report' %}" method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Champs du formulaire -->
+            {% for field in form %}
+            <div class="space-y-2">
+                <label for="{{ field.id_for_label }}" class="block text-lg font-medium text-gray-700">
+                    {% if field.name == 'date' %}
+                        Date
+                    {% elif field.name == 'content' %}
+                        Contenu du Bilan
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+                
+                {% if field.name == 'date' %}
+                    <!-- Sélecteur de date -->
+                    <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" required>
+                {% elif field.name == 'content' %}
+                    <!-- Zone de texte pour le contenu -->
+                    <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" rows="10" class="form-textarea w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Écrivez ici votre bilan hebdomadaire..." required>{{ field.value|default:'' }}</textarea>
+                {% else %}
+                    <!-- Autres champs de formulaire -->
+                    <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="{{ field.label }}" required>
+                {% endif %}
+                
+                {% if field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ field.errors }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <!-- Bouton Ajouter -->
+            <div class="flex justify-center">
+                <button type="submit" class="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 focus:outline-none transition duration-300">
+                    Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

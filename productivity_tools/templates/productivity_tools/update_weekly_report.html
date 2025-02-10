@@ -1,0 +1,40 @@
+{% extends "productivity_tools/base.html" %}
+
+{% block content %}
+<div class="flex justify-center bg-gray-100 py-12 px-6">
+    <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl space-y-8">
+        
+        <h1 class="text-3xl font-semibold text-gray-800 text-center">Modifier le Bilan Hebdomadaire</h1>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="space-y-2">
+                <label for="{{ field.id_for_label }}" class="block text-lg font-medium text-gray-700">
+                    {{ field.label }}
+                </label>
+                
+                {% if field.name == 'content' %}
+                    <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" rows="10" class="form-textarea w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Écrivez ou modifiez ici votre bilan hebdomadaire..." required>{{ field.value|default:'' }}</textarea>
+                {% elif field.name == 'date' %}
+                    <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" required>
+                {% else %}
+                    <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="{{ field.label }}" required>
+                {% endif %}
+                
+                {% if field.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ field.errors }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <div class="flex justify-center">
+                <button type="submit" class="bg-black text-white py-3 px-8 rounded-lg hover:bg-gray-800 focus:outline-none transition duration-300">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

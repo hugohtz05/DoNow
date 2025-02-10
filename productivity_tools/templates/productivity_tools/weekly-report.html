@@ -1,0 +1,52 @@
+{% extends "productivity_tools/base.html" %}
+
+{% block content %}
+<div class="max-w-screen-lg mx-auto p-6 bg-white shadow-lg rounded-lg space-y-6 mt-[50px]">
+
+    <h1 class="text-3xl font-semibold text-gray-800 text-center">Bilan Hebdomadaire</h1>
+
+    <div class="flex justify-center">
+        <a href="{% url 'productivity_tools:create_weekly_report' %}">
+            <button class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 focus:outline-none transition duration-300">
+                Créer un Bilan
+            </button>
+        </a>
+    </div>
+
+    <div class="space-y-6">
+        {% for report in page_obj %}
+            <div class="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center">
+                    <p class="text-lg text-gray-800 font-medium">{{ report.title }}</p>
+                    <p class="text-sm text-gray-500 mt-2 sm:mt-0 sm:ml-4">{{ report.date }}</p>
+                </div>
+                <a href="{% url 'productivity_tools:detail_weekly_report' report.pk %}">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none transition duration-300">
+                        Regarder le Bilan
+                    </button>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-center text-gray-500">Il n'y a aucun bilan pour le moment.</p>
+        {% endfor %}
+    </div>
+
+    <div class="flex justify-center mt-6 space-x-4">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">
+                Précédent
+            </a>
+        {% endif %}
+
+        <span class="px-4 py-2 bg-gray-100 rounded-lg">
+            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">
+                Suivant
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

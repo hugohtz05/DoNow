@@ -1,0 +1,35 @@
+{% extends "productivity_tools/base.html" %}
+
+{% block content %}
+<div class="max-w-screen-xl mx-auto px-4 py-8">
+
+    <div class="flex flex-col lg:flex-row gap-6">
+
+        <section class="flex-1 bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes Tâches à Faire</h2>
+            <ul class="list-disc pl-6">
+                {% for tasks in task %}
+                    <li class="text-gray-700">{{ tasks.title }}</li>
+                {% empty %}
+                    <li class="text-gray-500">Aucune tâche en attente.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="flex-1 bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Derniers Bilans Hebdomadaires</h2>
+            <ul class="space-y-4">
+                {% for reports in report %}
+                    <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-sm">
+                        <span class="text-gray-800 font-medium">{{ reports.title }}</span>
+                        <a href="{% url 'productivity_tools:detail_weekly_report' reports.pk %}" class="text-blue-600 hover:underline">Voir Détail</a>
+                    </li>
+                {% empty %}
+                    <li class="text-gray-500">Aucun bilan trouvé.</li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+    </div>
+</div>
+{% endblock %}

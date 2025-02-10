@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DoNow{% endblock %}</title>
+    {% load static %}
+    <script src="{% static 'js/pomodoro.js' %}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="{% block body_class %}bg-gray-200{% endblock %}">
+
+    <nav class="bg-white shadow-lg p-4">
+        <div class="max-w-screen-xl mx-auto flex justify-between items-center">
+            <a href="{% url 'productivity_tools:dashboard' %}" class="text-2xl font-semibold text-gray-800">
+                DoNow
+            </a>
+
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="{% url 'productivity_tools:dashboard' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">Dashboard</a>
+                <a href="{% url 'productivity_tools:agenda' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">Agenda</a>
+                <a href="{% url 'productivity_tools:excalidraw' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">Excalidraw</a>
+                <a href="{% url 'productivity_tools:pomodoro' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">Pomodoro</a>
+                <a href="{% url 'productivity_tools:add_to_do' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">To-Do List</a>
+                <a href="{% url 'productivity_tools:weekly_report' %}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bilan Hebdomadaire</a>
+                <a href="{% url 'user:logout' %}" class="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 focus:outline-none transition duration-300">Se déconnecter</a>
+            </div>
+
+            <div class="lg:hidden flex items-center">
+                <button id="menu-toggle" class="text-gray-700 hover:text-blue-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-90 text-white hidden z-50 flex flex-col justify-center items-center space-y-8 lg:hidden">
+            <a href="{% url 'productivity_tools:dashboard' %}" class="text-lg hover:text-gray-300">Dashboard</a>
+            <a href="{% url 'productivity_tools:agenda' %}" class="text-lg hover:text-gray-300">Agenda</a>
+            <a href="{% url 'productivity_tools:excalidraw' %}" class="text-lg hover:text-gray-300">Excalidraw</a>
+            <a href="{% url 'productivity_tools:pomodoro' %}" class="text-lg hover:text-gray-300">Pomodoro</a>
+            <a href="{% url 'productivity_tools:add_to_do' %}" class="text-lg hover:text-gray-300">To-Do List</a>
+            <a href="{% url 'productivity_tools:weekly_report' %}" class="text-lg hover:text-gray-300">Bilan Hebdomadaire</a>
+            <a href="{% url 'user:logout' %}" class="bg-white text-black py-2 px-4 rounded-lg hover:bg-gray-200 focus:outline-none transition duration-300">Se déconnecter</a>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>

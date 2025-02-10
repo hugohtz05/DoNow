@@ -1,0 +1,181 @@
+{% extends "productivity_tools/base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center text-black mb-4">Agenda hebdomadaire</h1>
+    <div class="grid grid-cols-8 gap-1 bg-white text-black border border-black">
+        <div class="bg-gray-200 font-bold p-2 border border-black"></div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Lundi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Mardi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Mercredi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Jeudi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Vendredi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Samedi</div>
+        <div class="bg-gray-200 font-bold p-2 text-center border border-black">Dimanche</div>
+
+        {% for hour in hours %}
+            <div class="bg-gray-200 font-bold p-2 text-right border border-black">{{ hour }}</div>
+            {% for day in days %}
+                <div class="bg-gray-100 p-2 border border-black cursor-pointer hover:bg-gray-300"
+                    data-day="{{ day }}" data-hour="{{ hour }}">
+                    {% with key=day|add:"-"|add:hour %}
+                        {% if events|key_exists:key %}
+                            {% with event=events|get_item:key %}
+                                <div class="text-white px-2 py-1" style="background-color: {{ event.color }}">
+                                    {{ event.event_text }} ({{ event.end_hour }})
+                                </div>
+                            {% endwith %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <button id="reset-button" class="px-4 py-2 bg-red-600 text-white rounded mb-[20px]">Réinitialiser l'agenda</button>
+</div>
+
+<div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded shadow-md w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+        <h2 class="text-xl font-bold mb-4">Ajouter un événement</h2>
+        <form id="event-form" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="event" class="block font-medium">Événement :</label>
+                <input type="text" id="event" name="event" class="w-full border border-gray-300 rounded p-2" required>
+            </div>
+            <div>
+                <label for="color" class="block font-medium">Couleur :</label>
+                <input type="color" id="color" name="color" class="w-full border border-gray-300 rounded p-2" required>
+            </div>
+            <input type="hidden" id="day" name="day">
+            <input type="hidden" id="hour" name="hour">
+            <input type="hidden" id="end-hour" name="end-hour">
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="close-modal" class="px-4 py-2 bg-gray-600 text-white rounded">Annuler</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Ajouter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let selectedCells = [];
+
+    document.querySelectorAll('.grid div[data-day]').forEach(cell => {
+        cell.addEventListener('mousedown', function () {
+            selectedCells = [this];
+            this.classList.add('bg-gray-300');
+        });
+
+        cell.addEventListener('mouseenter', function (e) {
+            if (e.buttons === 1) {
+                selectedCells.push(this);
+                this.classList.add('bg-gray-300');
+            }
+        });
+    });
+
+    document.addEventListener('mouseup', function () {
+        if (selectedCells.length > 0) {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+
+            const firstCell = selectedCells[0];
+            const lastCell = selectedCells[selectedCells.length - 1];
+
+            document.getElementById('day').value = firstCell.dataset.day;
+            document.getElementById('hour').value = firstCell.dataset.hour;
+            document.getElementById('end-hour').value = lastCell.dataset.hour;
+        }
+    });
+
+    document.getElementById('close-modal').addEventListener('click', function () {
+        const modal = document.getElementById('modal');
+        modal.classList.add('hidden');
+        selectedCells.forEach(cell => cell.classList.remove('bg-gray-300'));
+        selectedCells = [];
+    });
+
+    document.getElementById('event-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const eventText = document.getElementById('event').value;
+        const color = document.getElementById('color').value;
+        const data = {
+            event: eventText,
+            color: color,
+            day: document.getElementById('day').value,
+            hour: document.getElementById('hour').value,
+            'end-hour': document.getElementById('end-hour').value
+        };
+        
+        fetch("{% url 'productivity_tools:save_event' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                selectedCells.forEach(cell => {
+                    cell.textContent = eventText;
+                    cell.style.backgroundColor = color;
+                    cell.style.color = 'white';
+                });
+                const modal = document.getElementById('modal');
+                modal.classList.add('hidden');
+                selectedCells = [];
+            } else {
+                alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
+            }
+        })
+        .catch(error => {
+            alert('Erreur de connexion au serveur');
+        });
+    });
+
+
+
+
+    document.getElementById('reset-button').addEventListener('click', function () {
+        // Confirmation avec détails
+        const confirmMessage = `
+            Êtes-vous sûr de vouloir réinitialiser votre agenda ?
+            Cette action va supprimer TOUS vos événements définitivement.
+            Il n'est pas possible d'annuler cette opération après validation.
+        `;
+        
+        if (confirm(confirmMessage)) {
+            fetch("{% url 'productivity_tools:reset_agenda' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Suppression visuelle des événements
+                    document.querySelectorAll('.grid div[data-day] div.text-white').forEach(el => {
+                        el.remove();
+                    });
+                    
+                    alert(data.message);
+                } else {
+                    alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
+                }
+            })
+            .catch(error => {
+                alert('Erreur de connexion au serveur');
+            });
+        }
+    });
+</script>
+{% endblock %}
