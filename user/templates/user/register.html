@@ -8,17 +8,13 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <!-- Conteneur Principal -->
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md md:p-8">
         
-        <!-- Titre -->
         <h1 class="text-2xl font-semibold text-gray-800 text-center mb-4">Créer un compte</h1>
         
-        <!-- Formulaire -->
         <form method="post" class="space-y-4">
             {% csrf_token %}
             
-            <!-- Champ Nom d'utilisateur -->
             <div class="space-y-2">
                 <label for="id_username" class="block text-sm font-medium text-gray-700">Nom d'utilisateur</label>
                 <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Nom d'utilisateur" required>
@@ -27,7 +23,6 @@
                 {% endif %}
             </div>
             
-            <!-- Champ Mot de Passe -->
             <div class="space-y-2">
                 <label for="id_password1" class="block text-sm font-medium text-gray-700">Mot de Passe</label>
                 <input type="password" name="password1" id="id_password1" value="{{ form.password1.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Mot de Passe" required>
@@ -36,7 +31,6 @@
                 {% endif %}
             </div>
             
-            <!-- Champ Confirmation Mot de Passe -->
             <div class="space-y-2">
                 <label for="id_password2" class="block text-sm font-medium text-gray-700">Confirmer le Mot de Passe</label>
                 <input type="password" name="password2" id="id_password2" value="{{ form.password2.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Confirmer le Mot de Passe" required>
@@ -50,7 +44,6 @@
             </button>
         </form>
 
-        <!-- Lien de connexion -->
         <p class="text-sm text-center text-gray-600 mt-4">
             Déjà inscrit ? 
             <a href="{% url 'user:login' %}" class="text-black hover:underline">Se connecter</a>

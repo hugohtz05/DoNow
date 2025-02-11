@@ -8,22 +8,17 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <!-- Conteneur Principal -->
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md md:p-8">
         
-        <!-- Titre -->
         <h1 class="text-2xl font-semibold text-gray-800 text-center mb-4">Se connecter</h1>
         
-        <!-- Messages -->
         {% for message in messages %}
         <p class="text-center text-red-500 text-sm">{{ message }}</p>
         {% endfor %}
 
-        <!-- Formulaire -->
         <form method="post" class="space-y-6">
             {% csrf_token %}
             
-            <!-- Champ Nom d'utilisateur -->
             <div class="space-y-2">
                 <label for="id_username" class="block text-sm font-medium text-gray-700">Nom d'utilisateur</label>
                 <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Nom d'utilisateur" required>
@@ -32,7 +27,6 @@
                 {% endif %}
             </div>
             
-            <!-- Champ Mot de Passe -->
             <div class="space-y-2">
                 <label for="id_password" class="block text-sm font-medium text-gray-700">Mot de Passe</label>
                 <input type="password" name="password" id="id_password" class="form-input w-full p-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black-500" placeholder="Mot de Passe" required>
@@ -41,13 +35,11 @@
                 {% endif %}
             </div>
 
-            <!-- Bouton de soumission -->
             <button type="submit" class="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 focus:outline-none transition duration-300">
                 Se connecter
             </button>
         </form>
 
-        <!-- Lien d'inscription -->
         <p class="text-sm text-center text-gray-600 mt-4">
             Pas encore inscrit ? 
             <a href="{% url 'user:register' %}" class="text-black hover:underline">Créer un compte</a>
