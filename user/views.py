@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.urls import reverse
 
 def login_user(request):
     if request.method == 'POST':
@@ -12,7 +13,7 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            return redirect('productivity_tools:dashboard')
+            return redirect(reverse('productivity_tools:dashboard'))
         else:
             messages.info(request, 'Mot de passe ou pseudo incorrect')
     form = AuthenticationForm()        
@@ -28,7 +29,7 @@ def register_user(request):
         
         if form.is_valid():
             form.save()
-            return redirect('productivity_tools:dashboard')
+            return redirect(reverse('productivity_tools:dashboard'))
     else:
         form = UserCreationForm()
 
