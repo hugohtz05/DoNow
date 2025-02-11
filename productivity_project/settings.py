@@ -45,7 +45,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',  # Nécessaire pour les sessions
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Nécessaire pour l'authentification
     'django.contrib.messages.middleware.MessageMiddleware',  # Nécessaire pour les messages
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
