@@ -134,4 +134,4 @@ if not DEBUG:
 MEDIA_URL = 'images/'
 MEDIA_ROOT = 'images/'
 
-LOGIN_URL = '/productivity_tools/dashboard/'
+LOGIN_URL = '/user/login/'
