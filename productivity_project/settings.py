@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'productivity_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': 'npg_ogql74KkYjXS',
-        'HOST': 'ep-tight-lake-a9hzd2kg-pooler.gwc.azure.neon.tech', 
-        'PORT': '5432', 
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),     
+        'USER': config('DB_USER'),      
+        'PASSWORD': config('DB_PASSWORD'),  
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),     
     }
 }
 
