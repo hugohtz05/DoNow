@@ -133,3 +133,5 @@ if not DEBUG:
 
 MEDIA_URL = 'images/'
 MEDIA_ROOT = 'images/'
+
+LOGIN_URL = '/user/login/' 
