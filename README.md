@@ -13,5 +13,6 @@ DoNow est une application de productivité conçue pour aider les utilisateurs �
 ## Objectif 🎯
 
 L'objectif de **DoNow** est de permettre aux utilisateurs d'atteindre leurs objectifs de manière simple et efficace, tout en favorisant une meilleure gestion du temps et une approche plus organisée de leur quotidien. L'application est idéale pour ceux qui cherchent à maximiser leur productivité sans perdre de vue leurs priorités. ✨
+https://donow.space/
 
 ---
